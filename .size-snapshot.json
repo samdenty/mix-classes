@@ -1,18 +1,18 @@
 {
   "/mnt/c/Users/samde/GitHub/mix-classes/dist/mix-classes.cjs.development.js": {
-    "bundled": 3159,
-    "minified": 1072,
-    "gzipped": 537
+    "bundled": 4188,
+    "minified": 1320,
+    "gzipped": 620
   },
   "/mnt/c/Users/samde/GitHub/mix-classes/dist/mix-classes.cjs.production.js": {
-    "bundled": 3159,
-    "minified": 1072,
-    "gzipped": 537
+    "bundled": 4188,
+    "minified": 1320,
+    "gzipped": 620
   },
   "/mnt/c/Users/samde/GitHub/mix-classes/dist/mix-classes.es.production.js": {
-    "bundled": 3141,
-    "minified": 1055,
-    "gzipped": 528,
+    "bundled": 4151,
+    "minified": 1286,
+    "gzipped": 607,
     "treeshaked": {
       "rollup": {
         "code": 0,
@@ -24,13 +24,13 @@
     }
   },
   "/mnt/c/Users/samde/GitHub/mix-classes/dist/mix-classes.umd.development.js": {
-    "bundled": 3606,
-    "minified": 1140,
-    "gzipped": 573
+    "bundled": 4683,
+    "minified": 1349,
+    "gzipped": 651
   },
   "/mnt/c/Users/samde/GitHub/mix-classes/dist/mix-classes.umd.production.js": {
-    "bundled": 3606,
-    "minified": 1140,
-    "gzipped": 573
+    "bundled": 4683,
+    "minified": 1349,
+    "gzipped": 651
   }
 }

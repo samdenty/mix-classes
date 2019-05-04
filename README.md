@@ -1,6 +1,6 @@
 # mix-classes
 
-Easily add typescript-safe mixins to JS classes, with support for constructors, overloading and more. Correctly handles `this` for each class, so it's guaranteed to work with any class.
+Easily add typescript-safe mixins to JS classes, with support for constructors, overloading and more. Correctly handles `this` for each class, so it'll work with anything.
 
 ```ts
 import { mix } from 'mix-classes'
