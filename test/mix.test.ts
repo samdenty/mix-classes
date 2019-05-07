@@ -102,6 +102,7 @@ test('Supports instanceof checks', () => {
   expect(derived instanceof A).toBeTruthy()
   expect(derived instanceof B).toBeTruthy()
   expect(derived instanceof C).toBeTruthy()
+  expect(derived instanceof Derived).toBeTruthy()
   expect(derived instanceof BaseMix).toBeTruthy()
   expect(derived instanceof Object).toBeTruthy()
 

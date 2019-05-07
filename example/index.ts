@@ -1,10 +1,15 @@
 import { mix, getMixin } from '../src'
+import { Constructable } from '../src/types'
 
 class BaseMix {
   constructor(public baseValue: string) {}
 
   public chain() {
     return this
+  }
+
+  public base() {
+    return this.baseValue
   }
 }
 
@@ -56,6 +61,16 @@ class Derived extends mix(A, B, C) {
     super(['a'], undefined, ['c'])
   }
 
+  public base() {
+    console.log('called')
+    return super.base()
+  }
+
+  public getB() {
+    console.log('get B called', this.local)
+    return super.getB()
+  }
+
   public derivedB() {
     const bThis = getMixin(this, B)
     console.log(bThis.local)
@@ -63,10 +78,17 @@ class Derived extends mix(A, B, C) {
 }
 
 const derived = new Derived()
+const derivedA = getMixin(derived, A)
+const derivedB = getMixin(derived, B)
 derived.derivedB()
+
+derived.getA()
+derived.getB()
 
 Object.assign(window, {
   derived,
+  derivedA,
+  derivedB,
   Derived,
   BaseMix,
   A,

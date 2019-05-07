@@ -5,9 +5,15 @@ Easily add typescript-safe mixins to JS classes, with support for constructors, 
 ```ts
 import { mix } from 'mix-classes'
 
-class Contactable { constructor(public email: string, public phone?: string) {} }
-class Nameable { constructor(public name: string) {} }
-class Website { constructor(public websiteUrl: string) {} }
+class Contactable {
+  constructor(public email: string, public phone?: string) {}
+}
+class Nameable {
+  constructor(public name: string) {}
+}
+class Website {
+  constructor(public websiteUrl: string) {}
+}
 
 class Developer extends mix(Nameable, Contactable, Website) {
   constructor() {
@@ -95,4 +101,31 @@ class Test extends mix(A, B) {
 }
 
 const test = new Test()
+```
+
+## Typescript generics
+
+Typescript generics are supported, but it requires making an extra function call to `mix.generic`
+
+```ts
+import { mix, getMixin } from 'mix-classes'
+
+class B {}
+
+class Role<Type extends string> {
+  constructor(public type: Type) {}
+}
+
+class User<Username extends string> {
+  constructor(public username: Username) {}
+}
+
+class Admin extends mix.generic<User<'bob'> | Role<'admin'>()(User, Role) {
+  constructor() {
+    super(['bob'], ['admin'])
+  }
+}
+
+const test = new Admin()
+test.username // type 'bob'
 ```

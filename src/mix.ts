@@ -15,7 +15,7 @@ const extend = (base: any, extension: any) =>
     },
   })
 
-export const mix = <TConstructors extends Constructable[]>(
+export const mix = <TConstructors extends Constructable[], TGenerics = never>(
   ...Classes: TConstructors
 ) => {
   const MixinClass = class MixinClass {
@@ -105,5 +105,13 @@ export const mix = <TConstructors extends Constructable[]>(
     recursePrototype(Class.prototype)
   })
 
-  return MixinClass as typeof MixinClass & Mixin<TConstructors>
+  return MixinClass as typeof MixinClass & Mixin<TConstructors, TGenerics>
+}
+
+mix.generic = <TGenerics = void>() => {
+  return <TConstructors extends Constructable[]>(...Classes: TConstructors) => {
+    const result = mix<TConstructors, TGenerics>(...Classes)
+
+    return result
+  }
 }
