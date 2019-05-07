@@ -105,7 +105,26 @@ const test = new Test()
 
 ## Typescript generics
 
-Typescript generics are supported, but it requires using Typescript's declaration merging
+Typescript generics are supported, but it requires using Typescript's declaration merging.
+
+To use them, simply wrap the class that you want to pass generics to in `Generic()`, and then add an interface with the same name as the class you want it in.
+
+Before:
+
+```ts
+import { Mix } from 'mix-classes'
+
+class MyClass extends Mix(User, Nameable, Ageable) {}
+```
+
+After:
+
+```ts
+import { Generic, Mix } from 'mix-classes'
+
+interface MyClass extends User<'bob'> {}
+class MyClass extends Mix(Generic(User), Nameable, Ageable) {}
+```
 
 ```ts
 import { Mix, Generic } from 'mix-classes'
