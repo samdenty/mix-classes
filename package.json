@@ -38,5 +38,6 @@
     "pretty-quick": "^1.10.0",
     "tsdx": "^0.5.6",
     "typescript": "^3.4.5"
-  }
+  },
+  "dependencies": {}
 }

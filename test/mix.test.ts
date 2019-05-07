@@ -1,4 +1,4 @@
-import { mix, getMixin } from '../src'
+import { Mix, getMixin, Generic } from '../src'
 
 class BaseMix {
   constructor(public baseValue: string) {}
@@ -28,7 +28,9 @@ class A extends BaseMix {
   }
 }
 
-class B extends BaseMix {
+class B<T extends string> extends BaseMix {
+  public bType: T = null as any
+
   constructor() {
     super('b')
   }
@@ -63,7 +65,9 @@ class C extends BaseMix {
   }
 }
 
-class Derived extends mix(A, B, C) {
+interface Derived extends B<'b'> {}
+
+class Derived extends Mix(A, Generic(B), C) {
   constructor() {
     super(['a'], undefined, ['c'])
   }

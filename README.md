@@ -3,7 +3,7 @@
 Easily add typescript-safe mixins to JS classes, with support for constructors, overloading and more. Correctly handles `this` for each class, so it'll work with anything.
 
 ```ts
-import { mix } from 'mix-classes'
+import { Mix } from 'mix-classes'
 
 class Contactable {
   constructor(public email: string, public phone?: string) {}
@@ -15,13 +15,13 @@ class Website {
   constructor(public websiteUrl: string) {}
 }
 
-class Developer extends mix(Nameable, Contactable, Website) {
+class Developer extends Mix(Nameable, Contactable, Website) {
   constructor() {
     super(['Bob'], ['hi@example.com'], ['https://example.com'])
   }
 }
 
-class Company extends mix(Nameable, Contactable) {
+class Company extends Mix(Nameable, Contactable) {
   constructor() {
     super(['Apple'], ['hi@apple.com', '18-00'], ['https://apple.com'])
   }
@@ -44,7 +44,7 @@ company.websiteUrl
 You can pass custom constructor arguments to each mixin within an array inside the `super` call. The arguments order is dependant on the `mix` array order.
 
 ```ts
-import { mix } from 'mix-classes'
+import { Mix } from 'mix-classes'
 
 class Nameable {
   constructor(public name: string) {}
@@ -54,7 +54,7 @@ class Ageable {
   constructor(public age: number) {}
 }
 
-class Person extends mix(Nameable, Ageable) {
+class Person extends Mix(Nameable, Ageable) {
   constructor() {
     super(['Bob'], [50])
     //     ^ name argument for Nameable
@@ -68,7 +68,7 @@ class Person extends mix(Nameable, Ageable) {
 All mixins are seperate classes with different `this` values, meaning you don't need to worry about name collisions.
 
 ```ts
-import { mix, getMixin } from 'mix-classes'
+import { Mix, getMixin } from 'mix-classes'
 
 class A {
   variable = 'a'
@@ -84,7 +84,7 @@ class B {
   }
 }
 
-class Test extends mix(A, B) {
+class Test extends Mix(A, B) {
   constructor() {
     super()
 
@@ -105,10 +105,10 @@ const test = new Test()
 
 ## Typescript generics
 
-Typescript generics are supported, but it requires making an extra function call to `mix.generic`
+Typescript generics are supported, but it requires using Typescript's declaration merging
 
 ```ts
-import { mix, getMixin } from 'mix-classes'
+import { Mix, Generic } from 'mix-classes'
 
 class B {}
 
@@ -120,7 +120,9 @@ class User<Username extends string> {
   constructor(public username: Username) {}
 }
 
-class Admin extends mix.generic<User<'bob'> | Role<'admin'>()(User, Role) {
+interface Admin extends User<'bob'>, Role<'admin'> {}
+
+class Admin extends Mix(Generic(User), Generic(Role), B) {
   constructor() {
     super(['bob'], ['admin'])
   }

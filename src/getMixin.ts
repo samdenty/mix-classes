@@ -1,4 +1,5 @@
-import { Constructable, INSTANCE_THIS } from './types'
+import { Constructable } from './types'
+import { INSTANCE_THIS } from './createMixinClass'
 
 /**
  * Gets a specific mixin's `this`

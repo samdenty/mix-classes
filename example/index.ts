@@ -1,5 +1,4 @@
-import { mix, getMixin } from '../src'
-import { Constructable } from '../src/types'
+import { Generic, Mix, getMixin } from '../src'
 
 class BaseMix {
   constructor(public baseValue: string) {}
@@ -56,7 +55,7 @@ class C extends BaseMix {
   }
 }
 
-class Derived extends mix(A, B, C) {
+class Derived extends Mix(A, B, C) {
   constructor() {
     super(['a'], undefined, ['c'])
   }
@@ -76,6 +75,28 @@ class Derived extends mix(A, B, C) {
     console.log(bThis.local)
   }
 }
+
+class Role<Type extends string> {
+  constructor(public type: Type) {}
+}
+
+class User<Username extends string> {
+  constructor(public username: Username) {}
+}
+
+interface Admin extends User<'admin'> {}
+
+class Admin extends Mix(Generic(User), Role, B) {
+  constructor() {
+    super(['bob'], ['admin'])
+    this.username
+  }
+}
+
+const test = new Admin()
+test.type
+
+test.username // type 'bob'
 
 const derived = new Derived()
 const derivedA = getMixin(derived, A)

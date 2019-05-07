@@ -1,5 +1,4 @@
-export const INSTANCE_THIS = Symbol('instanceThis')
-export const MIXIN_CLASSES = Symbol('mixinClasses')
+import { IGeneric } from './Generic'
 
 type NewableParameters<T extends any> = T extends new (...args: infer P) => any
   ? P
@@ -10,51 +9,34 @@ export interface Constructable {
   prototype: any
 }
 
-type MixinParameters<TConstructors extends Constructable[]> = {
-  [K in keyof TConstructors]?: NewableParameters<TConstructors[K]>
-}
+export type Mixable = Constructable | IGeneric
 
-type ReplaceGenericlessPrototypes<Genericless extends any, Generics> = {
-  [K in keyof Genericless]: Extract<
-    Generics,
-    Genericless[K]['prototype']
-  > extends never
-    ? Genericless[K]['prototype']
-    : Extract<Generics, Genericless[K]['prototype']>
-}
-
-export interface Mixin<TConstructors extends Constructable[], Generics> {
-  new (...args: MixinParameters<TConstructors>): ArrayToIntersection<
-    ReplaceGenericlessPrototypes<TConstructors, Generics>
-  >
-}
-
-type Idx<T extends any, K extends keyof any, Yes> = T extends Record<K, any>
-  ? T[K] & Yes
-  : unknown
-
-export type ArrayToIntersection<T extends any[]> = Idx<
-  T,
-  '0',
-  Idx<
-    T,
-    '1',
-    Idx<
-      T,
-      '2',
-      Idx<
-        T,
-        '3',
-        Idx<
-          T,
-          '4',
-          Idx<
-            T,
-            '5',
-            Idx<T, '6', Idx<T, '7', Idx<T, '8', Idx<T, '9', unknown>>>>
-          >
-        >
-      >
-    >
-  >
+type ExtractConstructable<TMixable extends Mixable> = TMixable extends IGeneric<
+  infer TConstructable
 >
+  ? TConstructable
+  : TMixable
+
+type MixinParameters<TMixables extends Mixable[]> = {
+  [K in keyof TMixables]?: TMixables[K] extends Mixable
+    ? NewableParameters<ExtractConstructable<TMixables[K]>>
+    : TMixables[K]
+}
+
+type UnionToIntersection<U> = (U extends any
+  ? (k: U) => void
+  : never) extends ((k: infer I) => void)
+  ? I
+  : never
+
+type MixinInstance<TMixables extends Mixable[]> = UnionToIntersection<
+  {
+    [K in keyof TMixables]: TMixables[K] extends Constructable
+      ? TMixables[K]
+      : never
+  }[number]['prototype']
+>
+
+export interface Mixin<TMixables extends Mixable[]> {
+  new (...args: MixinParameters<TMixables>): MixinInstance<TMixables>
+}

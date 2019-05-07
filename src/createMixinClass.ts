@@ -1,5 +1,8 @@
-import { Constructable, Mixin, MIXIN_CLASSES, INSTANCE_THIS } from './types'
+import { Constructable, Mixin, Mixable } from './types'
 import { getMixin } from './getMixin'
+
+export const INSTANCE_THIS = Symbol('instanceThis')
+export const MIXIN_CLASSES = Symbol('mixinClasses')
 
 const extend = (base: any, extension: any) =>
   new Proxy(base, {
@@ -15,17 +18,22 @@ const extend = (base: any, extension: any) =>
     },
   })
 
-export const mix = <TConstructors extends Constructable[], TGenerics = never>(
-  ...Classes: TConstructors
+const extractConstructable = (Mixable: Mixable): Constructable =>
+  'prototype' in Mixable ? Mixable : Mixable.Class
+
+export const createMixinClass = <TMixables extends Mixable[]>(
+  Mixables: TMixables
 ) => {
   const MixinClass = class MixinClass {
-    static [MIXIN_CLASSES] = Classes;
+    static [MIXIN_CLASSES] = Mixables;
 
     // Stores the `this` proxies for each class
     [INSTANCE_THIS] = new WeakMap()
 
     constructor(...classesArgs: any[]) {
-      Classes.forEach((Class, i) => {
+      Mixables.forEach((Mixable, i) => {
+        const Class = extractConstructable(Mixable)
+
         const instance = new Class(...(classesArgs[i] || []))
         const instanceThis = extend(this, instance)
 
@@ -48,7 +56,10 @@ export const mix = <TConstructors extends Constructable[], TGenerics = never>(
     }
   }
 
-  Classes.forEach(Class => {
+  Mixables.forEach(Mixable => {
+    const Class: Constructable =
+      'prototype' in Mixable ? Mixable : Mixable.Class
+
     const restoreThisInsideFunction = (fn: Function) =>
       function(this: typeof MixinClass['prototype'], ...args: any[]) {
         return fn.apply(getMixin(this, Class), args)
@@ -105,13 +116,5 @@ export const mix = <TConstructors extends Constructable[], TGenerics = never>(
     recursePrototype(Class.prototype)
   })
 
-  return MixinClass as typeof MixinClass & Mixin<TConstructors, TGenerics>
-}
-
-mix.generic = <TGenerics = void>() => {
-  return <TConstructors extends Constructable[]>(...Classes: TConstructors) => {
-    const result = mix<TConstructors, TGenerics>(...Classes)
-
-    return result
-  }
+  return (MixinClass as any) as Mixin<TMixables>
 }
