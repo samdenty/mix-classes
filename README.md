@@ -2,9 +2,10 @@
 
 Easily add typescript-safe mixins to JS classes, with support for generics, constructors, overloading and more. Correctly handles `this` for each class, so it'll work with anything.
 
-- Allows you to use Typescript generics
-- You can use constructors in mixins, allowing you to pass arguments
+- Typescript generics
+- Pass arguments to mixins, by providing an array of arguments
 - Supports `super` calls in overloaded methods
+- Use [`instanceof`](https://developer.mozilla.org/en/docs/Web/JavaScript/Reference/Operators/instanceof) to check for mixin classes
 - Handles the `this` inside classes, so that they always access their local scope first. No need to worry about name-collisions
 
 ```ts
