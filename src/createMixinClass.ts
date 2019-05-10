@@ -24,16 +24,16 @@ const extractConstructable = (Mixable: Mixable): Constructable =>
 export const createMixinClass = <TMixables extends Mixable[]>(
   Mixables: TMixables
 ) => {
+  const Classes = Mixables.map(extractConstructable)
+
   const MixinClass = class MixinClass {
-    static [MIXIN_CLASSES] = Mixables;
+    static [MIXIN_CLASSES] = Classes;
 
     // Stores the `this` proxies for each class
     [INSTANCE_THIS] = new WeakMap()
 
     constructor(...classesArgs: any[]) {
-      Mixables.forEach((Mixable, i) => {
-        const Class = extractConstructable(Mixable)
-
+      Classes.forEach((Class, i) => {
         const instance = new Class(...(classesArgs[i] || []))
         const instanceThis = extend(this, instance)
 
@@ -56,10 +56,7 @@ export const createMixinClass = <TMixables extends Mixable[]>(
     }
   }
 
-  Mixables.forEach(Mixable => {
-    const Class: Constructable =
-      'prototype' in Mixable ? Mixable : Mixable.Class
-
+  Classes.forEach(Class => {
     const restoreThisInsideFunction = (fn: Function) =>
       function(this: typeof MixinClass['prototype'], ...args: any[]) {
         return fn.apply(getMixin(this, Class), args)
