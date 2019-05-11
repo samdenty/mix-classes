@@ -70,6 +70,8 @@ export const createMixinClass = <TMixables extends Mixable[]>(
         configurable: true,
         value(possibleMixin: typeof MixinClass['prototype']) {
           if (possibleMixin && possibleMixin.constructor) {
+            if (possibleMixin.constructor === Class) return true
+
             const mixinClasses = (possibleMixin.constructor as typeof MixinClass)[
               MIXIN_CLASSES
             ]
@@ -78,7 +80,7 @@ export const createMixinClass = <TMixables extends Mixable[]>(
               return true
             }
 
-            return possibleMixin.isPrototypeOf(Class)
+            return Class.isPrototypeOf(possibleMixin.constructor)
           }
 
           return hasInstance(possibleMixin)
