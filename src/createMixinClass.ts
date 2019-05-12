@@ -13,8 +13,9 @@ const extend = (base: any, extension: any) =>
     },
     set: (_, prop, value) => {
       const target = prop in extension ? extension : base
+      target[prop] = value
 
-      return (target[prop] = value)
+      return true
     },
   })
 

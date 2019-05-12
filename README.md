@@ -120,7 +120,11 @@ Before:
 ```ts
 import { Mix } from 'mix-classes'
 
-class MyClass extends Mix(User, Nameable, Ageable) {}
+class MyClass<T extends string = 'initial'> extends Mix(
+  User,
+  Nameable,
+  Ageable
+) {}
 ```
 
 After:
@@ -128,8 +132,11 @@ After:
 ```ts
 import { Generic, Mix } from 'mix-classes'
 
-interface MyClass extends User<'bob'> {}
-class MyClass extends Mix(Generic(User), Nameable, Ageable) {}
+// Move all generic type signatures to the interface
+// including default values.
+interface MyClass<T extends string = 'initial'> extends User<'bob'> {}
+
+class MyClass<T> extends Mix(Generic(User), Nameable, Ageable) {}
 ```
 
 ```ts
