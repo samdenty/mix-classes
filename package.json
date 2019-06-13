@@ -1,6 +1,6 @@
 {
   "name": "mix-classes",
-  "version": "1.1.5",
+  "version": "1.1.6",
   "main": "dist/index.js",
   "umd:main": "dist/mix-classes.umd.production.js",
   "module": "dist/mix-classes.es.production.js",
@@ -32,13 +32,12 @@
     "inheritance"
   ],
   "devDependencies": {
-    "@babel/preset-env": "^7.4.4",
-    "@types/jest": "^24.0.12",
-    "husky": "^2.2.0",
-    "prettier": "^1.17.0",
-    "pretty-quick": "^1.10.0",
-    "tsdx": "^0.5.9",
-    "typescript": "^3.4.5"
+    "@types/jest": "^24.0.14",
+    "husky": "^2.4.1",
+    "prettier": "^1.18.2",
+    "pretty-quick": "^1.11.0",
+    "tsdx": "^0.6.1",
+    "typescript": "^3.5.1"
   },
   "dependencies": {}
 }
