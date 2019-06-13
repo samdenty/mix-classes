@@ -29,14 +29,16 @@ type UnionToIntersection<U> = (U extends any
   ? I
   : never
 
-type MixinInstance<TMixables extends Mixable[]> = UnionToIntersection<
-  {
-    [K in keyof TMixables]: TMixables[K] extends Constructable
-      ? TMixables[K]
-      : never
-  }[number]['prototype']
->
+type MixinInstance<TMixables extends Mixable[]> = {
+  [K in keyof TMixables]: TMixables[K] extends Constructable
+    ? TMixables[K]
+    : never
+}[number]['prototype']
 
 export interface Mixin<TMixables extends Mixable[]> {
-  new (...args: MixinParameters<TMixables>): MixinInstance<TMixables>
+  new (...args: MixinParameters<TMixables>): MixinInstance<
+    TMixables
+  > extends never
+    ? {}
+    : UnionToIntersection<MixinInstance<TMixables>>
 }
