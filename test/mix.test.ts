@@ -1,4 +1,4 @@
-import { Mix, getMixin, Generic } from '../src'
+import { Generic, getMixin, Mix } from '../src'
 
 class BaseMix {
   constructor(public baseValue: string) {}
@@ -117,4 +117,28 @@ test('Supports looking up specific mixins', () => {
   expect(getMixin(derived, A)!.local).toEqual('a')
   expect(getMixin(derived, B)!.local).toEqual('b')
   expect(getMixin(derived, C)!.local).toEqual('c')
+})
+
+test('Retains original instanceof behaviour', () => {
+  class Base {}
+  class ExtendedBase extends Base {}
+
+  class A extends Mix(ExtendedBase) {}
+  class B extends Base {}
+
+  expect(new Base() instanceof Object).toBeTruthy()
+  expect(new ExtendedBase() instanceof Object).toBeTruthy()
+  expect(new A() instanceof Object).toBeTruthy()
+  expect(new B() instanceof Object).toBeTruthy()
+
+  expect(new B() instanceof B).toBeTruthy()
+  expect(new B() instanceof Base).toBeTruthy()
+
+  expect(new ExtendedBase() instanceof ExtendedBase).toBeTruthy()
+  expect(new ExtendedBase() instanceof Base).toBeTruthy()
+
+  expect(new Base() instanceof Base).toBeTruthy()
+
+  expect(new B() instanceof Function).toBeFalsy()
+  expect(new A() instanceof Function).toBeFalsy()
 })

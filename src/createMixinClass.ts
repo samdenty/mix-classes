@@ -1,5 +1,5 @@
-import { Constructable, Mixin, Mixable } from './types'
 import { getMixin } from './getMixin'
+import { Constructable, Mixable, Mixin } from './types'
 
 export const INSTANCE_THIS = Symbol('instanceThis')
 export const MIXIN_CLASSES = Symbol('mixinClasses')
@@ -67,11 +67,15 @@ export const createMixinClass = <TMixables extends Mixable[]>(
     const recursePrototype = (prototype: Constructable['prototype']) => {
       // Add instanceof support
       const hasInstance = prototype.constructor[Symbol.hasInstance]
+
       Object.defineProperty(prototype.constructor, Symbol.hasInstance, {
         configurable: true,
         value(possibleMixin: typeof MixinClass['prototype']) {
+          // Retain original instanceof for prototype
+          if (prototype.isPrototypeOf(possibleMixin)) return true
+
           if (possibleMixin && possibleMixin.constructor) {
-            if (possibleMixin.constructor === Class) return true
+            // if (possibleMixin.constructor === Class) return true
 
             const mixinClasses = (possibleMixin.constructor as typeof MixinClass)[
               MIXIN_CLASSES
