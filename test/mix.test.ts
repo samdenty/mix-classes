@@ -142,3 +142,17 @@ test('Retains original instanceof behaviour', () => {
   expect(new B() instanceof Function).toBeFalsy()
   expect(new A() instanceof Function).toBeFalsy()
 })
+
+test('works at any extension deep', () => {
+  class D {}
+  class C extends Mix(D) {}
+  class B extends Mix(C) {}
+  class A extends Mix(B) {}
+
+  const a = new A()
+
+  expect(a instanceof A).toBeTruthy()
+  expect(a instanceof B).toBeTruthy()
+  expect(a instanceof C).toBeTruthy()
+  expect(a instanceof D).toBeTruthy()
+})

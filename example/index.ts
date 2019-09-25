@@ -1,18 +1,27 @@
 import * as mixExports from '../src'
 import { Generic, getMixin, Mix } from '../src'
 
-Object.assign(window, mixExports)
+class D {}
+class C extends Mix(D) {}
+class B extends Mix(C) {}
+class A extends Mix(B) {}
 
-class Base {}
-class ExtendedBase extends Base {}
+const a = new A()
+Object.assign(window, mixExports, { A, B, C, D, a })
 
-class A extends Mix(ExtendedBase) {}
-
-class B extends Base {}
-
-console.log(new B() instanceof B, new B() instanceof Base)
-console.log(
-  new A() instanceof A,
-  new A() instanceof ExtendedBase,
-  new A() instanceof Base
-)
+console.group({
+  A: a instanceof A,
+})
+console.groupEnd()
+console.group({
+  B: a instanceof B,
+})
+console.groupEnd()
+console.group({
+  C: a instanceof C,
+})
+console.groupEnd()
+console.group({
+  D: a instanceof D,
+})
+console.groupEnd()

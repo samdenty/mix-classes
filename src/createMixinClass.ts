@@ -75,15 +75,22 @@ export const createMixinClass = <TMixables extends Mixable[]>(
           if (prototype.isPrototypeOf(possibleMixin)) return true
 
           if (possibleMixin && possibleMixin.constructor) {
-            // if (possibleMixin.constructor === Class) return true
-
-            const mixinClasses = (possibleMixin.constructor as typeof MixinClass)[
-              MIXIN_CLASSES
-            ]
-
-            if (mixinClasses && mixinClasses.includes(Class)) {
-              return true
+            const isInMixins = (mixin: any): boolean => {
+              const classes = mixin[MIXIN_CLASSES]
+              if (!classes) return false
+              for (const cls of classes) {
+                if (cls === Class) return true
+                const isChildMixin = isInMixins(cls)
+                if (isChildMixin) return true
+              }
+              return false
             }
+
+            if (
+              possibleMixin.constructor &&
+              isInMixins(possibleMixin.constructor)
+            )
+              return true
 
             return Class.isPrototypeOf(possibleMixin.constructor)
           }
