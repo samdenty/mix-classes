@@ -1,6 +1,6 @@
 {
   "name": "mix-classes",
-  "version": "1.1.7",
+  "version": "1.1.8",
   "main": "dist/index.js",
   "umd:main": "dist/mix-classes.umd.production.js",
   "module": "dist/mix-classes.es.production.js",
