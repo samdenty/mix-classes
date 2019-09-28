@@ -86,13 +86,17 @@ export const createMixinClass = <TMixables extends Mixable[]>(
               return false
             }
 
-            if (
-              possibleMixin.constructor &&
-              isInMixins(possibleMixin.constructor)
-            )
-              return true
+            if (this && this !== prototype.constructor) {
+              // not used as mixin, `class [this] extends [prototype.constructor] {}`
 
-            return Class.isPrototypeOf(possibleMixin.constructor)
+              return prototype.constructor.isPrototypeOf(
+                possibleMixin.constructor
+              )
+            }
+
+            if (isInMixins(possibleMixin.constructor)) return true
+
+            if (!this) return false
           }
 
           return hasInstance(possibleMixin)
@@ -116,7 +120,9 @@ export const createMixinClass = <TMixables extends Mixable[]>(
           descriptor.value = restoreThisInsideFunction(descriptor.value)
         }
 
-        Object.defineProperty(MixinClass.prototype, name, descriptor)
+        if (!MixinClass.prototype.hasOwnProperty(name)) {
+          Object.defineProperty(MixinClass.prototype, name, descriptor)
+        }
       })
 
       const parent = Object.getPrototypeOf(prototype)

@@ -156,3 +156,57 @@ test('works at any extension deep', () => {
   expect(a instanceof C).toBeTruthy()
   expect(a instanceof D).toBeTruthy()
 })
+
+test('supports super in extended classes', () => {
+  class A {
+    _() {
+      return 'A'
+    }
+  }
+
+  class B extends A {
+    _() {
+      return `${super._()}B`
+    }
+  }
+
+  class C extends B {
+    _() {
+      return `${super._()}C`
+    }
+  }
+  class D extends Mix(C) {
+    _() {
+      return `${super._()}D`
+    }
+  }
+
+  expect(new D()._()).toEqual('ABCD')
+})
+
+test(`hasInstance returns false for normal extends`, () => {
+  class Base {}
+
+  class MixExtends extends Mix(Base) {}
+  class NormalExtends extends Base {}
+
+  const mixExtends = new MixExtends()
+
+  expect(mixExtends instanceof NormalExtends).toBeFalsy()
+})
+
+test(`doesn't overwrite previous hasInstance's`, () => {
+  class Base {}
+
+  class A extends Base {}
+  class B extends Mix(Base) {}
+  class C extends Mix(A) {}
+
+  var a = new A()
+  var b = new B()
+  var c = new C()
+
+  expect(a instanceof Base).toBeTruthy()
+  expect(b instanceof Base).toBeTruthy()
+  expect(c instanceof Base).toBeTruthy()
+})
